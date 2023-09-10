@@ -1,0 +1,28 @@
+name: emanuel-braz/delete-release
+description: GitHub Action Delete Release
+author: Emanuel Braz
+branding:
+  icon: send
+  color: gray-dark
+inputs:
+  token:
+    description: 'The GitHub token.'
+    required: true
+  tag:
+    description: 'Delete release by tag.'
+    required: false
+  use_latest_pre_release:
+    description: 'Delete latest pre-release.'
+    default: 'false'
+  use_latest_published_release:
+    description: 'Delete latest published release.'
+    default: 'false'
+  use_latest_draft:
+    description: 'Delete latest draft.'
+    default: 'false'
+  verbose:
+    description: 'Enable verbose logging.'
+    default: 'false'
+runs:
+  using: node16
+  main: action.js

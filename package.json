@@ -1,0 +1,31 @@
+{
+    "name": "braz-actions",
+    "version": "0.0.1",
+    "private": true,
+    "description": "GitHub Actions",
+    "main": "create_update_release/action.js",
+    "scripts": {
+        "version": "node -p \"require('./package.json').version\"",
+        "changelog": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/emanuel-braz/action-release.git"
+    },
+    "keywords": [
+        "github",
+        "actions",
+        "node",
+        "setup"
+    ],
+    "author": "Emanuel Braz",
+    "license": "MIT",
+    "dependencies": {
+        "@actions/core": "1.2.6",
+        "@actions/github": "4.0.0",
+        "changelog-parser": "2.8.0"
+    },
+    "devDependencies": {
+        "conventional-changelog-cli": "2.2.2"
+    }
+}

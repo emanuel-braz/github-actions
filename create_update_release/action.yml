@@ -1,0 +1,47 @@
+name: emanuel-braz/create-update-release
+description: GitHub Action Release
+author: Emanuel Braz
+branding:
+  icon: send
+  color: gray-dark
+inputs:
+  token:
+    description: 'The GitHub token.'
+    required: true
+  tag:
+    description: 'An optional tag for the release. If this is omitted the git ref will be used (if it is a tag).'
+    required: true
+  target:
+    description: 'An optional commit SHA or branch to tag. If omitted the default branch will be used.'
+    required: false
+  name:
+    description: 'The name of the release.'
+    required: true
+  body:
+    description: "The body of the release."
+    required: false
+  draft:
+      description: "Optionally marks this release as a draft release. Set to true to enable."
+      default: 'false'
+  pre_release:
+      description: "Optionally marks this release as a prerelease. Set to true to enable."
+      default: 'true'
+  force_update_published_release:
+    description: "Force update published release if it is already published and tag already exists."
+    required: false
+    default: 'false'
+  generate_release_notes:
+    description: 'Generate release notes.'
+    required: false
+    default: 'false'
+  use_latest_pre_release:
+    description: 'Get latest pre-release and update release.'
+    required: false
+    default: 'false'
+  verbose:
+    description: 'Enable verbose logging.'
+    required: false
+    default: 'false'
+runs:
+  using: node16
+  main: ./action.js
