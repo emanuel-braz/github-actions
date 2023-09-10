@@ -8,7 +8,7 @@
 #### draft
 **Optional** Whether to create a draft (unpublished) release. Default `false`.
 
-#### prerelease
+#### pre_release
 **Optional** Whether to identify the release as a prerelease. Default `true`.
 
 #### tag

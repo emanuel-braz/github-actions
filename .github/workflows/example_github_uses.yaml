@@ -1,0 +1,36 @@
+name: Example Github uses
+run-name: Release ${{inputs.build-name}}
+
+on:
+  workflow_dispatch:
+    inputs:
+      build-name:
+        description: 'Nome da versão (ex: 2.0.1)'
+        required: true
+        type: string
+      build-number:
+        description: 'Número da compilação [integer] (ex: 42)'
+        required: true
+        type: string
+      build-description:
+        description: 'Descrição curta (opicional)'
+        required: false
+        type: string
+
+jobs:
+  create-release-from-tag:
+    name: Create release as pre-release using the tag
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Create release
+      uses: emanuel-braz/github-actions/create_update_release@0.0.1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        name: "Release ${{inputs.build-name}}+${{inputs.build-number}}"
+        tag: "${{inputs.build-name}}+${{inputs.build-number}}"
+        body: |
+          What's new?
+          ${{inputs.build-description}}
+          ---
+          Full Changelog: https://github.com/emanuel-braz/github-actions/compare/${{inputs.build-name}}+${{inputs.build-number}}...master
