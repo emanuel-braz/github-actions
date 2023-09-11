@@ -6,7 +6,7 @@ require('child_process')
 
 const core = require('@actions/core');
 const github = require('@actions/github');
-const {Logger} = require('../utils/logger.js');
+const Logger = require('../utils/logger.js');
 
 (async () => {
     
@@ -102,7 +102,6 @@ const {Logger} = require('../utils/logger.js');
         if (release) {
             releaseOptions.release_id = release.id; // Must be part of the parameters.
 
-            logger.log('Release Options (Update)', releaseOptions);
             core.info(`Updating release for tag "${tag}".`);
 
             const result = await api.repos.updateRelease(releaseOptions);
@@ -110,8 +109,7 @@ const {Logger} = require('../utils/logger.js');
             isCreated = false;
 
         } else {
-            logger.log('Release Options (Create)', releaseOptions);
-            core.info(`Creating release for tag ${tag}.`);
+            core.info(`Creating release for tag "${tag}".`);
 
             const result = await api.repos.createRelease(releaseOptions);
             release = result.data;
