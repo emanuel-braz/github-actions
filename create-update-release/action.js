@@ -31,7 +31,7 @@ const {Logger} = require('../utils/logger.js');
         try {
 
             if (useLatestPreRelease) {
-
+                
                 var releases = await api.repos.listReleases({
                     ...github.context.repo
                 });

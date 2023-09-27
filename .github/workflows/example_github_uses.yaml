@@ -24,7 +24,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Create release
-      uses: emanuel-braz/github-actions/create_update_release@0.0.1
+      uses: emanuel-braz/github-actions/create-update-release@0.0.7
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         name: "Release ${{inputs.build-name}}+${{inputs.build-number}}"
