@@ -50,7 +50,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Delete Release Action
-        uses: ./delete_release
+        uses: ./delete-release
         with:
           tag: ${{ github.event.inputs.tag }}
           use_latest_pre_release: ${{ github.event.inputs.use_latest_pre_release }}

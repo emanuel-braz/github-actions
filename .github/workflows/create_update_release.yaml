@@ -77,7 +77,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Release Action
-        uses: ./create_update_release
+        uses: ./create-update-release
         with:
           name: ${{ github.event.inputs.name }}
           body: ${{ github.event.inputs.body }}

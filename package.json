@@ -1,9 +1,9 @@
 {
     "name": "braz-actions",
-    "version": "0.0.1",
+    "version": "0.0.7",
     "private": true,
     "description": "GitHub Actions",
-    "main": "create_update_release/action.js",
+    "main": "create-update-release/action.js",
     "scripts": {
         "version": "node -p \"require('./package.json').version\"",
         "changelog": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md"
@@ -22,8 +22,10 @@
     "license": "MIT",
     "dependencies": {
         "@actions/core": "1.2.6",
-        "@actions/github": "4.0.0",
-        "changelog-parser": "2.8.0"
+        "@actions/github": "^4.0.0",
+        "axios": "^1.5.1",
+        "changelog-parser": "2.8.0",
+        "openai": "^4.10.0"
     },
     "devDependencies": {
         "conventional-changelog-cli": "2.2.2"
