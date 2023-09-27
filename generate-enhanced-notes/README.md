@@ -32,10 +32,13 @@ jobs:
           verbose: true
 
       - name: Print Release Notes (Use it as you want)
-        run: echo "${{ steps.release_notes.outputs.enhanced_notes }}"
+        run: |
+          echo "${{ steps.release_notes.outputs.release_notes }}"
+          echo "---"
+          echo "${{ steps.release_notes.outputs.enhanced_notes }}"
 ```
 
-### Inputs (FILTERS)
+### Inputs
 
 #### tag_name
 **Required** The name of the tag.
@@ -54,6 +57,17 @@ jobs:
 
 #### verbose
 **Optional** Whether to print verbose output. Default `false`.
+
+---
+### Outputs
+
+#### enhanced_notes
+The enhanced release notes.
+
+#### release_notes
+The original release notes.
+
+
 
 ## TODO
 - [ ] Add support for multiple languages

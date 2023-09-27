@@ -13,6 +13,21 @@ const GptService = require('../services/gpt_service.js');
 
 class GenerateEnhancedNotes {
 
+    filterPrTitles(input) {
+        const lines = input.split('\n');
+  
+        const filteredLines = lines.filter((line) => !/^## What's Changed|^## New Contributors|^\* @|^\*\*Full Changelog\*\*:/.test(line));
+  
+        const output = filteredLines.map((line) => {
+            const index = line.lastIndexOf(' by @');
+            if (index !== -1) {
+              return line.substring(0, index);
+            }
+            return line;
+          }).filter(Boolean).join('\n');
+        return output.trim();
+    }
+
     async call() {
 
         var tagName = core.getInput('tag_name');
@@ -36,13 +51,17 @@ class GenerateEnhancedNotes {
 
         const githubService = new GitHubService(token, owner, repo);
         var releasenotes = await githubService.generateReleaseNotes(tagName, previousTagName);
-        logger.log(`RELEASE NOTES:\n\n${releasenotes}`);
+        logger.log(`ORIGINAL RELEASE NOTES:\n\n${releasenotes}`);
+        core.setOutput('release_notes', releasenotes);
+
+        var releaseNoteFiltered = this.filterPrTitles(releasenotes);
+        logger.log(`FILTERED RELEASE NOTES:\n\n${releaseNoteFiltered}`);
 
         const gptService = new GptService(openaiKey);
-        var enhancedNotes = await gptService.generateReleaseNotes(releasenotes);
+        var enhancedNotes = await gptService.generateReleaseNotes(releaseNoteFiltered);
         logger.log(`ENHANCED RELEASE NOTES:\n\n${enhancedNotes}`);
-
         core.setOutput('enhanced_notes', enhancedNotes);
+
         return enhancedNotes;
     }
 }

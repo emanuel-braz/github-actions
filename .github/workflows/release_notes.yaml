@@ -16,6 +16,7 @@ jobs:
 
     outputs:
       enhanced_notes: ${{ steps.release_notes.outputs.enhanced_notes }}
+      release_notes: ${{ steps.release_notes.outputs.release_notes }}
 
     steps:
     - uses: actions/checkout@v4 
@@ -41,4 +42,8 @@ jobs:
     needs: enhanced_release_notes
     steps:
     - name: Print Release Notes (Use it as you want)
-      run: echo "${{ needs.enhanced_release_notes.outputs.enhanced_notes }}"
+      run: |
+        echo "---"
+        echo "${{ needs.enhanced_release_notes.outputs.release_notes }}"
+        echo "---"
+        echo "${{ needs.enhanced_release_notes.outputs.enhanced_notes }}"

@@ -27,6 +27,8 @@ inputs:
 outputs:
   enhanced_notes:
     description: The generated release notes.
+  release_notes:
+    description: The default release notes.
 
 runs:
   using: node16
