@@ -6,23 +6,23 @@ require('child_process')
 
 const core = require('@actions/core');
 const github = require('@actions/github');
-const {Logger} = require('../utils/logger.js');
+const Logger = require('../utils/logger.js');
 
 (async () => {
     
     const api = github.getOctokit(core.getInput('token'));
-    const tag = core.getInput('tag');
-    const name = core.getInput('name');
-    const body = core.getInput('body');
-    const verbose = core.getInput('verbose') == 'true';
-    const forceUpdatePublishedRelease = core.getInput('force_update_published_release') == 'true';
-    const draft = core.getInput('draft') == 'true';
-    const preRelease = core.getInput('pre_release') == 'true';
-    const generateReleaseNotes = core.getInput('generate_release_notes') == 'true';
-    const target = core.getInput('target');
-    const useLatestPreRelease = core.getInput('use_latest_pre_release') == 'true';
+    const rTag = core.getInput('tag');
+    const rName = core.getInput('name');
+    const rBody = core.getInput('body');
+    const rVerbose = core.getInput('verbose') == 'true';
+    const rForceUpdatePublishedRelease = core.getInput('force_update_published_release') == 'true';
+    const rdraft = core.getInput('draft') == 'true';
+    const rPreRelease = core.getInput('pre_release') == 'true';
+    const rGenerateReleaseNotes = core.getInput('generate_release_notes') == 'true';
+    const rTarget = core.getInput('target');
+    const rUseLatestPreRelease = core.getInput('use_latest_pre_release') == 'true';
 
-    const logger = new Logger(verbose, core);
+    const logger = new Logger(rVerbose, core);
 
     try {
 
@@ -30,8 +30,8 @@ const {Logger} = require('../utils/logger.js');
 
         try {
 
-            if (useLatestPreRelease) {
-                
+            if (rUseLatestPreRelease) {
+
                 var releases = await api.repos.listReleases({
                     ...github.context.repo
                 });
@@ -43,7 +43,7 @@ const {Logger} = require('../utils/logger.js');
             } else {
                 result = await api.repos.getReleaseByTag({
                     ...github.context.repo,
-                    tag: tag
+                    tag: rTag
                 });
     
                 release = result.data;
@@ -58,7 +58,7 @@ const {Logger} = require('../utils/logger.js');
                 if (isDraft || isPrerelease) {
                     logger.log('The existing release with same tag will be updated.');
                 } else {
-                    if (forceUpdatePublishedRelease) {
+                    if (rForceUpdatePublishedRelease) {
                         logger.log('The existing release with same tag is published. We will update it.');
                     } else {
                         core.error('The existing release with same tag was released. We cannot update it.\n');
@@ -80,38 +80,36 @@ const {Logger} = require('../utils/logger.js');
         // Define the options, these are almost same when creating new and updating existing.
         var releaseOptions = {
             ...github.context.repo,
-            tag_name: tag,
-            prerelease: preRelease,
-            draft: draft,
-            generate_release_notes: generateReleaseNotes
+            tag_name: rTag,
+            prerelease: rPreRelease,
+            draft: rdraft,
+            generate_release_notes: rGenerateReleaseNotes
         };
 
-        if (name != '') {
-            releaseOptions.name = name;
+        if (rName != '') {
+            releaseOptions.name = rName;
         }
 
-        if (body != '') {
-            releaseOptions.body = body;
+        if (rBody != '') {
+            releaseOptions.body = rBody;
         }
 
-        if (target != '') {
-            releaseOptions.target_commitish = target;
+        if (rTarget != '') {
+            releaseOptions.target_commitish = rTarget;
         }
 
         // Create or update release
         if (release) {
             releaseOptions.release_id = release.id; // Must be part of the parameters.
 
-            logger.log('Release Options (Update)', releaseOptions);
-            core.info(`Updating release for tag "${tag}".`);
+            core.info(`Updating release for tag "${rTag}".`);
 
             const result = await api.repos.updateRelease(releaseOptions);
-            release = result.data; 
+            release = result.data;
             isCreated = false;
 
         } else {
-            logger.log('Release Options (Create)', releaseOptions);
-            core.info(`Creating release for tag ${tag}.`);
+            core.info(`Creating release for tag "${rTag}".`);
 
             const result = await api.repos.createRelease(releaseOptions);
             release = result.data;

@@ -1,4 +1,4 @@
-class Logger {
+module.exports = class Logger {
     constructor(verbose, core) {
         this.verbose = verbose;
         this.core = core;
@@ -11,8 +11,4 @@ class Logger {
             this.core.debug(message);
         }
     }
-}
-
-module.exports = {
-    Logger,
 };
