@@ -13,19 +13,20 @@ class GitHubService {
     this.repo = repo;
   }
 
-    filterPrTitles(input) {
-        const lines = input.split('\n');
+  filterPrTitles(input) {
+      const lines = input.split('\n');
 
-        const filteredLines = lines.filter((line) => !/^## What's Changed|^\*\*Full Changelog\*\*:/.test(line));
-        const output = filteredLines.map((line) => {
-            const index = line.lastIndexOf(' by @');
-            if (index !== -1) {
-              return line.substring(0, index);
-            }
-            return line;
-          }).filter(Boolean).join('\n');
-        return output.trim();
-    }
+      const filteredLines = lines.filter((line) => !/^## What's Changed|^## New Contributors|^\* @|^\*\*Full Changelog\*\*:/.test(line));
+
+      const output = filteredLines.map((line) => {
+          const index = line.lastIndexOf(' by @');
+          if (index !== -1) {
+            return line.substring(0, index);
+          }
+          return line;
+        }).filter(Boolean).join('\n');
+      return output.trim();
+  }
 
   async generateReleaseNotes(tagName, previousTagName) {
     try {

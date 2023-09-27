@@ -22,7 +22,7 @@ class GptService {
       const response = await this.openaiClient.chat.completions.create({
         messages: [
           {
-            content: 'Generate enhanced release notes in Portuguese language, for new app features. The notes must be commercial, generic and succinct.',
+            content: 'Generate enhanced Portuguese language release notes for new app features. The notes must be commercial, generic and strictly succinct.',
             role: 'system',
           },
           {

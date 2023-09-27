@@ -10,21 +10,35 @@ on:
         type: string
 
 jobs:
-  print_enhanced_release_notes:
+  enhanced_release_notes:
+    name: Generate Enhanced Release Notes
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        
-      - name: Generate Release Notes
-        id: release_notes
-        uses: ./generate-enhanced-notes
-        with:
-          token: "${{ secrets.GITHUB_TOKEN }}"
-          tag_name: ${{ github.event.inputs.tagName }}
-          openai_key: "${{ secrets.OPENAI_KEY }}"
-          use_previous_tag_latest_release: true
-          verbose: true
 
-      - name: Print Release Notes (Use it as you want)
-        run: echo "${{ steps.release_notes.outputs.enhanced_notes }}"
+    outputs:
+      enhanced_notes: ${{ steps.release_notes.outputs.enhanced_notes }}
+
+    steps:
+    - uses: actions/checkout@v4 
+    
+    # - uses: emanuel-braz/github-actions/generate-enhanced-notes@0.0.8
+    - uses: ./generate-enhanced-notes
+      id: release_notes
+      with:
+        tag_name: ${{ github.event.inputs.tagName }}
+        use_previous_tag_latest_release: true
+        verbose: true
+        token:  ${{ secrets.GITHUB_TOKEN }}
+        openai_key: ${{ secrets.OPENAI_KEY }}
+
+    - name: Print Release Notes (Use it as you want)
+      run: | 
+        echo "${{ steps.release_notes.outputs.enhanced_notes }}"
+        echo "${{ steps.release_notes.outputs.enhanced_notes }}" >> $GITHUB_STEP_SUMMARY
+
+  show_enhanced_release_notes:
+    name: Read Outputs from First Job
+    runs-on: ubuntu-latest
+    needs: enhanced_release_notes
+    steps:
+    - name: Print Release Notes (Use it as you want)
+      run: echo "${{ needs.enhanced_release_notes.outputs.enhanced_notes }}"

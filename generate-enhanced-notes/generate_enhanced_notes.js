@@ -6,23 +6,23 @@ require('child_process')
 
 const core = require('@actions/core');
 const github = require('@actions/github');
-const { Logger } = require('../utils/logger.js');
+const Logger = require('../utils/logger.js');
 
 const GitHubService = require('../services/github_service.js');
 const GptService = require('../services/gpt_service.js');
 
 class GenerateEnhancedNotes {
 
-    async call({ tagName, previousTagName, token, openaiKey, usePreviousTagLatestRelease, owner, repo, verbose }) {
+    async call() {
 
-        tagName = tagName || core.getInput('tag_name');
-        previousTagName = previousTagName || core.getInput('previous_tag_name');
-        token = token || core.getInput('token');
-        openaiKey = openaiKey || core.getInput('openai_key');
-        usePreviousTagLatestRelease = usePreviousTagLatestRelease || core.getInput('use_previous_tag_latest_release') == 'true';
-        verbose = verbose || core.getInput('verbose') == 'true';
-        owner = owner || github.context.repo.owner
-        repo = repo || github.context.repo.repo
+        var tagName = core.getInput('tag_name');
+        var previousTagName = core.getInput('previous_tag_name');
+        var token = core.getInput('token');
+        var openaiKey = core.getInput('openai_key');
+        var usePreviousTagLatestRelease = core.getInput('use_previous_tag_latest_release') == 'true';
+        var verbose = core.getInput('verbose') == 'true';
+        var owner = github.context.repo.owner
+        var repo = github.context.repo.repo
 
         const api = github.getOctokit(core.getInput('token'));
         const logger = new Logger(verbose, core);
