@@ -21,7 +21,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4 
     
-    # - uses: emanuel-braz/github-actions/generate-enhanced-notes@0.0.8
     - uses: ./generate-enhanced-notes
       id: release_notes
       with:
