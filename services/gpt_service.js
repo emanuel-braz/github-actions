@@ -30,7 +30,7 @@ class GptService {
             role: 'user',
           },
         ],
-        max_tokens: maxTokens || 500,
+        max_tokens: parseInt(maxTokens) || 500,
         n: 1,
         model: model || 'gpt-3.5-turbo',
       });

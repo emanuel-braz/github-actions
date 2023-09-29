@@ -29,6 +29,8 @@ jobs:
         verbose: true
         token:  ${{ secrets.GITHUB_TOKEN }}
         openai_key: ${{ secrets.OPENAI_KEY }}
+        max_tokens: 400
+        prompt: Gere notas de lançamento em português, para novos os recursos do aplicativo XYZ. As notas devem ser comerciais, genéricas e estritamentes sucintas. O objetivo é que as notas de lançamento sejam usadas para promover o aplicativo e não para descrever as alteração.
 
     - name: Print Release Notes (Use it as you want)
       run: | 
