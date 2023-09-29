@@ -33,9 +33,14 @@ class GenerateEnhancedNotes {
         var tagName = core.getInput('tag_name');
         var previousTagName = core.getInput('previous_tag_name');
         var token = core.getInput('token');
-        var openaiKey = core.getInput('openai_key');
         var usePreviousTagLatestRelease = core.getInput('use_previous_tag_latest_release') == 'true';
         var verbose = core.getInput('verbose') == 'true';
+        
+        var openaiKey = core.getInput('openai_key');
+        var prompt = core.getInput('prompt');
+        var maxTokens = core.getInput('max_tokens');
+        var model = core.getInput('model');
+
         var owner = github.context.repo.owner
         var repo = github.context.repo.repo
 
@@ -51,15 +56,15 @@ class GenerateEnhancedNotes {
 
         const githubService = new GitHubService(token, owner, repo);
         var releasenotes = await githubService.generateReleaseNotes(tagName, previousTagName);
-        logger.log(`ORIGINAL RELEASE NOTES:\n\n${releasenotes}`);
+        logger.log(`\nORIGINAL RELEASE NOTES:\n\n${releasenotes}`);
         core.setOutput('release_notes', releasenotes);
 
         var releaseNoteFiltered = this.filterPrTitles(releasenotes);
-        logger.log(`FILTERED RELEASE NOTES:\n\n${releaseNoteFiltered}`);
+        logger.log(`\nFILTERED RELEASE NOTES:\n\n${releaseNoteFiltered}`);
 
         const gptService = new GptService(openaiKey);
-        var enhancedNotes = await gptService.generateReleaseNotes(releaseNoteFiltered);
-        logger.log(`ENHANCED RELEASE NOTES:\n\n${enhancedNotes}`);
+        var enhancedNotes = await gptService.generateReleaseNotes(releaseNoteFiltered, prompt, maxTokens, model);
+        logger.log(`\nENHANCED RELEASE NOTES:\n\n${enhancedNotes}`);
         core.setOutput('enhanced_notes', enhancedNotes);
 
         return enhancedNotes;

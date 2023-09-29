@@ -1,5 +1,5 @@
 name: emanuel-braz/generate-enhanced-notes
-description: Generate release notes using OpenAI's GPT-3.5-turbo
+description: Generate release notes using OpenAI's GPT
 author: Emanuel Braz
 branding:
   icon: send
@@ -8,20 +8,29 @@ inputs:
   tag_name:
     description: The name of the tag of the release.
     required: true
+  prompt:
+    description: The prompt to use to generate the release notes.
+    required: false
+  max_tokens:
+    description: The maximum number of tokens to generate. Default 500.
+    required: false
+  model:
+    description: The model to use to generate the release notes. Default gpt-3.5-turbo.
+    required: false
   token:
-    description: The token to use to create the release.`.
+    description: The token to use to create the release
     required: true
   openai_key:
-    description: The key to use to generate the release notes.`. 
+    description: The key to use to generate the release notes
     required: true
   previous_tag_name:
     description: The name of the previous tag. if "usePreviousTagLatestRelease" is true, this is ignored.
     required: false
   use_previous_tag_latest_release:
-    description: Whether to use the latest release of the previous tag to generate the release notes. Default `false`.
+    description: Whether to use the latest release of the previous tag to generate the release notes. Default false.
     required: false
   verbose:
-    description: Whether to print verbose output. Default `false`.
+    description: Whether to print verbose output. Default false.
     required: false
 
 outputs:

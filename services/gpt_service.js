@@ -14,7 +14,7 @@ class GptService {
     this.openaiClient = new openai.OpenAI({ apiKey: this.apiKey });
   }
 
-  async generateReleaseNotes(pullRequestTitles) {
+  async generateReleaseNotes(pullRequestTitles, prompt, maxTokens, model) {
     try {
 
       console.log('Generating release notes...');
@@ -22,7 +22,7 @@ class GptService {
       const response = await this.openaiClient.chat.completions.create({
         messages: [
           {
-            content: 'Generate enhanced Portuguese language release notes for new app features. The notes must be commercial, generic and strictly succinct.',
+            content: prompt || 'Generate enhanced release notes for new app features. The notes must be commercial, generic and succinct.',
             role: 'system',
           },
           {
@@ -30,9 +30,9 @@ class GptService {
             role: 'user',
           },
         ],
-        max_tokens: 400,
+        max_tokens: maxTokens || 500,
         n: 1,
-        model: 'gpt-3.5-turbo',
+        model: model || 'gpt-3.5-turbo',
       });
 
       const generatedNotes = response.choices[0].message.content;
