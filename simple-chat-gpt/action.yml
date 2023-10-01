@@ -1,0 +1,27 @@
+name: emanuel-braz/simple-chat-gpt
+description: Generate message using Chat GPT.
+author: Emanuel Braz
+branding:
+  icon: send
+  color: gray-dark
+inputs:
+  prompt:
+    description: The prompt to use to generate message.
+    required: true
+  openai_key:
+    description: The key to use to authenticate with OpenAI.
+    required: true
+  max_tokens:
+    description: The maximum number of tokens to generate. Default 500.
+    required: false
+  model:
+    description: The model to use to generate the message. Default gpt-3.5-turbo.
+    required: false
+
+outputs:
+  message:
+    description: The generated message.
+
+runs:
+  using: node16
+  main: ./action.js

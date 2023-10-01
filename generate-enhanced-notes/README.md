@@ -1,4 +1,4 @@
-## Generate Enhanced Notes using OpenAI GPT-3.5
+## Generate Enhanced Notes using OpenAI GPT
 
 First create a secret in your repository called `OPENAI_KEY` with your OpenAI API key.
 https://platform.openai.com/account/api-keys
@@ -61,13 +61,11 @@ jobs:
 ---
 ### Outputs
 
-#### enhanced_notes
-The enhanced release notes.
-
 #### release_notes
 The original release notes.
 
-
+#### enhanced_notes
+The enhanced release notes.
 
 ## TODO
 - [ ] Add support for multiple languages

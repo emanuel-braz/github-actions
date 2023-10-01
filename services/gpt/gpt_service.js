@@ -9,9 +9,23 @@ const openai = require('openai');
 class GptService {
 
   constructor(apiKey) {
-    this.apiKey = apiKey;
     console.log('Initializing OpenAI client...');
+    
+    this.apiKey = apiKey;
     this.openaiClient = new openai.OpenAI({ apiKey: this.apiKey });
+  }
+
+  async chatCompletions(chatCompletionParams) {
+
+    try {
+      console.log('Generating chat completions...');
+      
+      const response = await this.openaiClient.chat.completions.create(chatCompletionParams);
+      return response;
+    } catch (error) {
+      console.error('[chatCompletions]', error);
+      throw error;
+    }
   }
 
   async generateReleaseNotes(pullRequestTitles, prompt, maxTokens, model) {

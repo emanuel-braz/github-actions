@@ -1,0 +1,40 @@
+name: Simple Chat GPT
+run-name: Action started by ${{ github.actor }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      prompt:
+        description: 'Prompt'
+        required: true
+        type: string
+
+jobs:
+  simple_chat_gpt:
+    name: Generate message
+    runs-on: ubuntu-latest
+
+    outputs:
+      message: ${{ steps.chat.outputs.message }}
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - uses: ./simple-chat-gpt
+      id: chat
+      with:
+        prompt: ${{ github.event.inputs.prompt }}
+        openai_key: ${{ secrets.OPENAI_KEY }}
+
+    - name: Print result message
+      run: | 
+        echo ${{ steps.chat.outputs.message }}
+        echo ${{ steps.chat.outputs.message }} >> $GITHUB_STEP_SUMMARY
+
+  print_message_from_other_job:
+    name: Print message
+    runs-on: ubuntu-latest
+    needs: simple_chat_gpt
+    steps:
+    - name: Print message from other job
+      run: echo ${{ needs.simple_chat_gpt.outputs.message }}

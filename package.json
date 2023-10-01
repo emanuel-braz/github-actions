@@ -21,11 +21,11 @@
     "author": "Emanuel Braz",
     "license": "MIT",
     "dependencies": {
-        "@actions/core": "1.2.6",
+        "@actions/core": "^1.10.1",
         "@actions/github": "^4.0.0",
         "axios": "^1.5.1",
         "changelog-parser": "2.8.0",
-        "openai": "^4.10.0"
+        "openai": "^4.11.0"
     },
     "devDependencies": {
         "conventional-changelog-cli": "2.2.2"

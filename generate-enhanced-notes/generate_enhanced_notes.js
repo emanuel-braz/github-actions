@@ -9,7 +9,7 @@ const github = require('@actions/github');
 const Logger = require('../utils/logger.js');
 
 const GitHubService = require('../services/github_service.js');
-const GptService = require('../services/gpt_service.js');
+const GptService = require('../services/gpt/gpt_service.js');
 
 class GenerateEnhancedNotes {
 
