@@ -1,10 +1,12 @@
 ### This projects keeps multiple Github Actions.
 ---
-#### - [Create or update a release](create_update_release/README.md)
+#### [Create or update a release](create_update_release/README.md)
 
-#### - [Delete a release](delete_release/README.md)
+#### [Delete a release](delete_release/README.md)
 
-#### - [Generate enhanced release notes](generate-enhanced-notes/README.md)
+#### [Generate enhanced release notes](generate-enhanced-notes/README.md)
+
+#### [Generate chat GPT message](simple-chat-gpt/README.md)
 
 #### Soon more actions will be added to have a complete Gitflow utilities.:
 - [ ] Manage PR
