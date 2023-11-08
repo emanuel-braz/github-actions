@@ -62,6 +62,7 @@ async function analyzeCode(parsedDiff, prDetails) {
     for (const file of parsedDiff) {
         if (file.to === "/dev/null") continue; // Ignore deleted files
         for (const chunk of file.chunks) {
+            
             const messages = createMessages(file, chunk, prDetails);
             const aiResponse = await getAIResponse(messages);
             if (aiResponse) {
@@ -79,13 +80,14 @@ function createMessages(file, chunk, prDetails) {
     const instructionJsonFormat = `- Always provide the response in following JSON format:  [{"lineNumber":  <line_number>, "reviewComment": "<review comment>"}]`;
 
     var contentSystemMessage = `You are a senior software engineer and your task is to review pull requests for possible bugs or bad development practices. Follow the instructions below:
-- You should never give positive comments or compliments.
-- You should never suggest removing empty line.
-- You should not suggest adding a new line at the end of the file.
-- You should never suggest to remove trailing or leading whitespace.
-- You should never suggest adding comment to code.
-- Avoid giving an excessive amount of suggestions for a single file. Prioritize the most important suggestions.
-- You will provide suggestions only if there is possible issues or bugs in the code, otherwise return an empty array.
+- You will provide suggestions only if there are issues or bugs in the code, otherwise return an empty array.
+- Do not give positive comments or compliments.
+- Don't suggest removing empty line
+- Never suggest adding newline at end of file.
+- Never suggest to remove trailing or leading whitespace.
+- Never suggest to remove the spaces.
+- Don't suggest adding comment to code.
+- If no issues are found, return an empty array.
 - Do use the given pull request title and description only for the overall context and only comment the code.`;
 
     if (overridePrompt) {

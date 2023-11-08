@@ -24,5 +24,6 @@ jobs:
           max_tokens: 900
           exclude: "**/*.json, **/*.md, **/*.g.dart"
           append_prompt: |
-            - Give a minimum of 0 suggestions and a maximum of 5 suggestions.
-            - Translate the comment in all "reviewComment" properties to portuguese (pt-br).
+            - Give a maximum of 4 suggestions
+            - Do not suggest code formatting issues.
+            - Do not suggest imports issues.
