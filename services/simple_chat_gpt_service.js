@@ -29,6 +29,18 @@ class SimpleChatGptService {
       throw error;
     }
   }
+
+  // chatCompletionParams: ChatCompletionParams
+  async fromParams({ chatCompletionParams }) {
+    try {
+      const response = await this.service.chatCompletions(chatCompletionParams);
+      const message = response.choices[0].message.content;
+      return message;
+    } catch (error) {
+      console.error('[SimpleChatGptService]', error);
+      throw error;
+    }
+  }
 }
 
 module.exports = SimpleChatGptService;
