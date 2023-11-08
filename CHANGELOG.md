@@ -1,5 +1,8 @@
-## <small>0.0.2 (2023-09-10)</small>
-* chore: add example and fix typo ([a0cff7b](https://github.com/emanuel-braz/action-release/commit/a0cff7b))
+## 0.1.0 (2023-11-09)
+* feat: add ai code review
 
-## <small>0.0.1 (2023-09-10)</small>
-* initial commit, migrate repo ([769459d](https://github.com/emanuel-braz/action-release/commit/769459d))
+## 0.0.2 (2023-09-10)
+* chore: add example and fix typo
+
+## 0.0.1 (2023-09-10)
+* initial commit
