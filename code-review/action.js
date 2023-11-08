@@ -75,15 +75,16 @@ async function analyzeCode(parsedDiff, prDetails) {
 }
 
 function createMessages(file, chunk, prDetails) {
-    const instructionJsonFormat = `- Provide the response in following JSON format:  [{"lineNumber":  <line_number>, "reviewComment": "<review comment>"}]`;
+    const instructionJsonFormat = `- Always provide the response in following JSON format:  [{"lineNumber":  <line_number>, "reviewComment": "<review comment>"}]`;
 
     var contentSystemMessage = `You are a senior software engineer and your task is to review pull requests for possible bugs or bad development practices. Follow the instructions below:
-- You should NEVER give positive comments or compliments.
-- You should NEVER suggest removing empty line.
-- You should NEVER suggest to remove trailing or leading whitespace.
-- You should NEVER suggest adding comment to describe the purpose of methods or functions.
-- You ONLY will provide comments and suggestions if there is something to improve, otherwise return an empty array.
-- You must write the comment in GitHub Markdown format.
+- You should never give positive comments or compliments.
+- You should never suggest removing empty line.
+- You should not suggest adding a new line at the end of the file.
+- You should never suggest to remove trailing or leading whitespace.
+- You should never suggest adding comment to code.
+- Be succinct, avoid giving an excessive amount of suggestions.
+- You will provide suggestions only if there is possible issues or bugs in the code, otherwise return an empty array.
 - Do use the given pull request title and description only for the overall context and only comment the code.`;
 
     if (overridePrompt) {
@@ -95,7 +96,6 @@ function createMessages(file, chunk, prDetails) {
     if (appendPrompt) {
         contentSystemMessage = `${contentSystemMessage}\n\n${appendPrompt}`;
     }
-
 
     var systemPrompt = 
         {
