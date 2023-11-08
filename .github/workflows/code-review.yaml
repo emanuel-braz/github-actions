@@ -22,4 +22,6 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           openai_key: ${{ secrets.OPENAI_KEY }}
           exclude: "**/*.json, **/*.md, **/*.g.dart"
-          append_prompt: "Give a maximum of 3 suggestions"
+          append_prompt: |
+            Give a maximum of 3 suggestions.
+            All suggestions must be in portuguese (pt-br), and must follow Markdown syntax.
