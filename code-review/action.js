@@ -136,7 +136,7 @@ async function getAIResponse(messages) {
         const chatCompletionParams = new ChatCompletionParams({
             messages: messages,
             model: OPENAI_API_MODEL,
-            temperature: 0.2,
+            temperature: 0,
             max_tokens: 900,
             top_p: 1,
             frequency_penalty: 0,
