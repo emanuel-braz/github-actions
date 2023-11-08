@@ -19,6 +19,7 @@ const OPENAI_API_KEY = core.getInput("openai_key");
 const OPENAI_API_MODEL = core.getInput("openai_key_model");
 const overridePrompt = core.getInput("override_prompt");
 const appendPrompt = core.getInput("append_prompt");
+const maxTokens = core.getInput("max_tokens");
 const excludePatterns = core
     .getInput("exclude")
     .split(",")
@@ -132,12 +133,14 @@ ${chunk.changes
 
 async function getAIResponse(messages) {
 
+    logger.log(`Max tokens: ${maxTokens}`);
+
     try {
         const chatCompletionParams = new ChatCompletionParams({
             messages: messages,
             model: OPENAI_API_MODEL,
             temperature: 0,
-            max_tokens: 900,
+            max_tokens: parseInt(maxTokens),
             top_p: 1,
             frequency_penalty: 0,
             presence_penalty: 0,

@@ -38,23 +38,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: AI Code Reviewer
         uses: emanuel-braz/github-actions/code-review@0.1.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           openai_key: ${{ secrets.OPENAI_KEY }}
+          max_tokens: 900
           exclude: "**/*.json, **/*.md, **/*.g.dart" # Optional: exclude patterns separated by commas
+          append_prompt: |
+            - Give a minimum of 0 suggestions and a maximum of 5 suggestions.
+            - Translate the comment in all "reviewComment" properties to portuguese (pt-br).
 ```
 
 - Customize the `exclude` input if you want to ignore certain file patterns from being reviewed.
 
-- Commit the changes to your repository, and AI Code Reviewer will start working on your future pull requests.
+- Commit the changes to your repository, and Code Reviewer Actions will start working on your future pull requests.
 
 ## How It Works
 
-The AI Code Reviewer GitHub Action retrieves the pull request diff, filters out excluded files, and sends code chunks to
+The Code Reviewer GitHub Action retrieves the pull request diff, filters out excluded files, and sends code chunks to
 the OpenAI API. It then generates review comments based on the AI's response and adds them to the pull request.
 
 ## Contributing

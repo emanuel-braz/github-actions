@@ -15,6 +15,10 @@ inputs:
     description: "OpenAI API model."
     required: false
     default: "gpt-3.5-turbo"
+  max_tokens:
+    description: "OpenAI API max tokens."
+    default: "900"
+    required: false
   exclude:
     description: "Glob patterns to exclude files from the diff analysis"
     required: false

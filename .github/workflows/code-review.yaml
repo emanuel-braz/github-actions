@@ -21,6 +21,8 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           openai_key: ${{ secrets.OPENAI_KEY }}
+          max_tokens: 900
           exclude: "**/*.json, **/*.md, **/*.g.dart"
           append_prompt: |
+            - Give a minimum of 0 suggestions and a maximum of 5 suggestions.
             - Translate the comment in all "reviewComment" properties to portuguese (pt-br).
