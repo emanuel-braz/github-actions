@@ -79,13 +79,14 @@ function createMessages(file, chunk, prDetails) {
     const instructionJsonFormat = `- Always provide the response in following JSON format:  [{"lineNumber":  <line_number>, "reviewComment": "<review comment>"}]`;
 
     var contentSystemMessage = `You are a senior software engineer and your task is to review pull requests for possible bugs or bad development practices. Follow the instructions below:
-- You should never give positive comments or compliments.
-- You should never suggest removing empty line.
-- You should not suggest adding a new line at the end of the file.
-- You should never suggest to remove trailing or leading whitespace.
-- You should never suggest adding comment to code.
-- Avoid giving an excessive amount of suggestions for a single file. Prioritize the most important suggestions.
 - You will provide suggestions only if there is possible issues or bugs in the code, otherwise return an empty array.
+- Do not give positive comments or compliments.
+- Do not suggest removing empty line.
+- Do not suggest adding a new line at the end of the file.
+- Do not suggest to remove trailing or leading whitespace.
+- Do not suggest to remove the spaces.
+- Do not suggest adding comment to code.
+- Avoid giving an excessive amount of suggestions for a single file. Prioritize the most important suggestions.
 - Do use the given pull request title and description only for the overall context and only comment the code.`;
 
     if (overridePrompt) {

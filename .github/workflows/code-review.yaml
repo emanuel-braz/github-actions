@@ -25,4 +25,5 @@ jobs:
           exclude: "**/*.json, **/*.md, **/*.g.dart"
           append_prompt: |
             - Give a minimum of 0 suggestions and a maximum of 5 suggestions.
+            - Do not suggest code formatting issues.
             - Translate the comment in all "reviewComment" properties to portuguese (pt-br).
