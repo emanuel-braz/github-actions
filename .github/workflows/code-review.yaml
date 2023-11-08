@@ -10,15 +10,16 @@ on:
 permissions: write-all
 
 jobs:
-  review:
+  code-review:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: AI Code Reviewer
+      - name: Code Review the pull request
         uses: ./code-review
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           openai_key: ${{ secrets.OPENAI_KEY }}
           exclude: "**/*.json, **/*.md, **/*.g.dart"
+          append_prompt: "Give a maximum of 3 suggestions"

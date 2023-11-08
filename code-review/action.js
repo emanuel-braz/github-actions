@@ -75,17 +75,31 @@ async function analyzeCode(parsedDiff, prDetails) {
 }
 
 function createMessages(file, chunk, prDetails) {
-    let systemPrompt = 
-        {
-            content: `You are a senior software engineer and your task is to review pull requests. Folow the instructions below.
-- Provide the response in following JSON format:  [{"lineNumber":  <line_number>, "reviewComment": "<review comment>"}]
-- You NEVER give positive comments or compliments.
-- You NEVER consider removing empty line.
-- You NEVER consider to remove trailing whitespace
-- You NEVER consider adding comment to describe the purpose of methods
-- You will Provide comments and suggestions ONLY if there is something to improve, otherwise return an empty array.
+    const instructionJsonFormat = `- Provide the response in following JSON format:  [{"lineNumber":  <line_number>, "reviewComment": "<review comment>"}]`;
+
+    var contentSystemMessage = `You are a senior software engineer and your task is to review pull requests for possible bugs or bad development practices. Follow the instructions below:
+- You should NEVER give positive comments or compliments.
+- You should NEVER suggest removing empty line.
+- You should NEVER suggest to remove trailing or leading whitespace.
+- You should NEVER suggest adding comment to describe the purpose of methods or functions.
+- You ONLY will provide comments and suggestions if there is something to improve, otherwise return an empty array.
 - You must write the comment in GitHub Markdown format.
-- Do use the given description only for the overall context and only comment the code.`,
+- Do use the given pull request title and description only for the overall context and only comment the code.`;
+
+    if (overridePrompt) {
+        contentSystemMessage = overridePrompt;
+    }
+
+    contentSystemMessage = `${contentSystemMessage}\n${instructionJsonFormat}`;
+
+    if (appendPrompt) {
+        contentSystemMessage = `${contentSystemMessage}\n\n${appendPrompt}`;
+    }
+
+
+    var systemPrompt = 
+        {
+            content: contentSystemMessage,
             role: "system",
         };
 
@@ -109,7 +123,7 @@ ${chunk.changes
             .map((c) => `${c.ln ? c.ln : c.ln2} ${c.content}`)
             .join("\n")}
 \`\`\`
-            `,
+        `,
             role: "user",
         };
 
@@ -123,7 +137,7 @@ async function getAIResponse(messages) {
             messages: messages,
             model: OPENAI_API_MODEL,
             temperature: 0.2,
-            max_tokens: 700,
+            max_tokens: 900,
             top_p: 1,
             frequency_penalty: 0,
             presence_penalty: 0,
@@ -155,8 +169,6 @@ function createComment(file, chunk, aiResponses) {
     });
 }
 
-// comments: Array<{ body: string; path: string; line: number }>
-// return Promise<void>
 async function createReviewComment(owner, repo, pull_number, comments) {
     await octokit.pulls.createReview({
         owner,
