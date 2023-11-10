@@ -1,0 +1,35 @@
+name: emanuel-braz/code-review
+description: "Perform code reviews and comment on diffs using OpenAI API."
+author: Emanuel Braz
+branding:
+  icon: send
+  color: gray-dark
+inputs:
+  token:
+    description: "GitHub token to interact with the repository."
+    required: true
+  openai_key:
+    description: "OpenAI API key for GPT."
+    required: true
+  openai_key_model:
+    description: "OpenAI API model."
+    required: false
+    default: "gpt-3.5-turbo"
+  max_tokens:
+    description: "OpenAI API max tokens."
+    default: "900"
+    required: false
+  exclude:
+    description: "Glob patterns to exclude files from the diff analysis"
+    required: false
+    default: ""
+  override_prompt:
+    description: "The text to be used to override the default prompt."
+    required: false
+  append_prompt:
+    description: "The text to be used to append to the default prompt."
+    required: false
+
+runs:
+  using: "node16"
+  main: ./action.js

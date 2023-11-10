@@ -8,6 +8,8 @@
 
 #### [Generate chat GPT message](simple-chat-gpt/README.md)
 
+#### [Code review Pull Requests](code-review/README.md)
+
 #### Soon more actions will be added to have a complete Gitflow utilities.:
 - [ ] Manage PR
 - [ ] Manage Issue
