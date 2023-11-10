@@ -77,10 +77,11 @@ async function analyzeCode(parsedDiff, prDetails) {
 }
 
 function createMessages(file, chunk, prDetails) {
-    const instructionJsonFormat = `- Always provide the response in following JSON format:  [{"lineNumber":  <line_number>, "reviewComment": "<review comment>"}]`;
+    const instructionJsonFormat = `You are a senior software engineer and your task is to review pull requests for possible bugs.
+You will provide suggestions only if there are issues or bugs in the code, otherwise return an empty array "[]".
+If there are suggestions, so you must respond in JSON format: [{"lineNumber":  <line_number>, "reviewComment": "<review comment>"}]`;
 
-    var contentSystemMessage = `You are a senior software engineer and your task is to review pull requests for possible bugs or bad development practices. Follow the instructions below:
-- You will provide suggestions only if there are issues or bugs in the code, otherwise return an empty array.
+    var contentSystemMessage = `Follow the instructions below:
 - Do not give positive comments or compliments.
 - Don't suggest removing empty line
 - Never suggest adding newline at end of file.
@@ -94,7 +95,7 @@ function createMessages(file, chunk, prDetails) {
         contentSystemMessage = overridePrompt;
     }
 
-    contentSystemMessage = `${contentSystemMessage}\n${instructionJsonFormat}`;
+    contentSystemMessage = `${instructionJsonFormat}\n\n${contentSystemMessage}`;
 
     if (appendPrompt) {
         contentSystemMessage = `${contentSystemMessage}\n\n${appendPrompt}`;
