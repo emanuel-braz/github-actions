@@ -77,10 +77,11 @@ async function analyzeCode(parsedDiff, prDetails) {
 }
 
 function createMessages(file, chunk, prDetails) {
-    const instructionJsonFormat = `- Always provide the response in following JSON format:  [{"lineNumber":  <line_number>, "reviewComment": "<review comment>"}]`;
+    const instructionJsonFormat = `The most important rules are:
+- You will provide suggestions only if there are issues or bugs in the code, otherwise return an empty array "[]".
+- You always provide the response in JSON format, example: [{"lineNumber":  <line_number>, "reviewComment": "<review comment>"}]`;
 
     var contentSystemMessage = `You are a senior software engineer and your task is to review pull requests for possible bugs or bad development practices. Follow the instructions below:
-- You will provide suggestions only if there are issues or bugs in the code, otherwise return an empty array.
 - Do not give positive comments or compliments.
 - Don't suggest removing empty line
 - Never suggest adding newline at end of file.
@@ -94,15 +95,19 @@ function createMessages(file, chunk, prDetails) {
         contentSystemMessage = overridePrompt;
     }
 
-    contentSystemMessage = `${contentSystemMessage}\n${instructionJsonFormat}`;
-
     if (appendPrompt) {
         contentSystemMessage = `${contentSystemMessage}\n\n${appendPrompt}`;
     }
 
-    var systemPrompt = 
+    var systemPrompt1 = 
         {
             content: contentSystemMessage,
+            role: "system",
+        };
+    
+    var systemPrompt2 = 
+        {
+            content: instructionJsonFormat,
             role: "system",
         };
 
@@ -130,7 +135,7 @@ ${chunk.changes
             role: "user",
         };
 
-    return [systemPrompt, userPrompt];
+    return [systemPrompt1, systemPrompt2, userPrompt];
 }
 
 async function getAIResponse(messages) {
