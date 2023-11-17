@@ -57,30 +57,47 @@ async function getDiff(owner, repo, pull_number) {
 }
 
 async function analyzeCode(parsedDiff, prDetails) {
-    const comments = []; //Array<{ body: string; path: string; line: number }>
+    const allReviews = []; //Array<{ body: string; path: string; line: number }>
 
     for (const file of parsedDiff) {
         if (file.to === "/dev/null") continue; // Ignore deleted files
         for (const chunk of file.chunks) {
             
-            const messages = createMessages(file, chunk, prDetails);
+            const messages = generateMessages(file, chunk, prDetails);
             const aiResponse = await getAIResponse(messages);
             if (aiResponse) {
-                const newComments = createComment(file, chunk, aiResponse);
-                if (newComments) {
-                    comments.push(...newComments);
+                if (!isJSON(aiResponse)) {
+                    logger.log(`AI response is not in JSON format: ${aiResponse}`);
+                    createCommentOnPr(aiResponse, prDetails.owner, prDetails.repo, prDetails.pull_number, file.to);
+                } else {
+                    logger.log(`AI response is in JSON format: ${aiResponse}`);
+                    const reviews = generateReviewsFromJsonArray(file, chunk, aiResponse);
+                    if (reviews) {
+                        allReviews.push(...reviews);
+                    }
                 }
             }
         }
     }
-    return comments;
+    return allReviews;
 }
 
-function createMessages(file, chunk, prDetails) {
-    const instructionJsonFormat = `- Always provide the response in following JSON format:  [{"lineNumber":  <line_number>, "reviewComment": "<review comment>"}]`;
+function isJSON(obj) {
+    try {
+        JSON.parse(obj);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
 
-    var contentSystemMessage = `You are a senior software engineer and your task is to review pull requests for possible bugs or bad development practices. Follow the instructions below:
-- You will provide suggestions only if there are issues or bugs in the code, otherwise return an empty array.
+function generateMessages(file, chunk, prDetails) {
+
+    const instructionJsonFormat = `You are a senior software engineer and your task is to review pull requests for possible bugs or bad development practices. Follow the instructions:
+- Always provide the response in following JSON format:  [{"lineNumber":  <line_number>, "reviewComment": "<review comment>"}]
+- You will provide suggestions only if there are issues or bugs in the code, otherwise return an empty array.`;
+
+    var contentSystemMessage = `
 - Do not give positive comments or compliments.
 - Don't suggest removing empty line
 - Never suggest adding newline at end of file.
@@ -94,10 +111,10 @@ function createMessages(file, chunk, prDetails) {
         contentSystemMessage = overridePrompt;
     }
 
-    contentSystemMessage = `${contentSystemMessage}\n${instructionJsonFormat}`;
+    contentSystemMessage = `${instructionJsonFormat}\n${contentSystemMessage}`;
 
     if (appendPrompt) {
-        contentSystemMessage = `${contentSystemMessage}\n\n${appendPrompt}`;
+        contentSystemMessage = `${contentSystemMessage}\n${appendPrompt}`;
     }
 
     var systemPrompt = 
@@ -141,7 +158,7 @@ async function getAIResponse(messages) {
         const chatCompletionParams = new ChatCompletionParams({
             messages: messages,
             model: OPENAI_API_MODEL,
-            temperature: 0,
+            temperature: 0.1,
             max_tokens: parseInt(maxTokens),
             top_p: 1,
             frequency_penalty: 0,
@@ -153,7 +170,7 @@ async function getAIResponse(messages) {
 
         const result = response?.trim() || "[]";
         logger.log(`AI response: ${result}`);
-        return JSON.parse(result);
+        return result;
     } catch (error) {
         console.error("Error:", error);
         return null;
@@ -161,7 +178,10 @@ async function getAIResponse(messages) {
 }
 
 // Array<{ body: string; path: string; line: number }>
-function createComment(file, chunk, aiResponses) {
+function generateReviewsFromJsonArray(file, chunk, aiResponses) {
+    
+    aiResponses = JSON.parse(aiResponses);
+
     return aiResponses.flatMap((aiResponse) => {
         if (!file.to) {
             return [];
@@ -174,12 +194,23 @@ function createComment(file, chunk, aiResponses) {
     });
 }
 
-async function createReviewComment(owner, repo, pull_number, comments) {
+async function createReviewOnPr(owner, repo, pull_number, comments) {
     await octokit.pulls.createReview({
         owner,
         repo,
         pull_number,
         comments,
+        event: "COMMENT",
+    });
+}
+
+async function createCommentOnPr(body, owner, repo, pull_number, path) {
+    octokit.pulls.createReview({
+        owner,
+        repo,
+        pull_number,
+        path,
+        body,
         event: "COMMENT",
     });
 }
@@ -233,7 +264,7 @@ async function main() {
 
     const comments = await analyzeCode(filteredDiff, prDetails);
     if (comments.length > 0) {
-        await createReviewComment(
+        createReviewOnPr(
             prDetails.owner,
             prDetails.repo,
             prDetails.pull_number,
