@@ -16,7 +16,7 @@ jobs:
     steps:
       - name: Ask question
         id: chat
-        uses: emanuel-braz/github-actions/simple-chat-gpt@0.0.11
+        uses: emanuel-braz/github-actions/simple-chat-gpt@0.1.2
         with:
           prompt: Who was Alberto Santos-Dumont?
           openai_key: ${{ secrets.OPENAI_KEY }}

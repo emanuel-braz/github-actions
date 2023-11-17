@@ -1,3 +1,6 @@
+## 0.1.2 (2023-11-17)
+* update readme
+
 ## 0.1.0 (2023-11-09)
 * feat: add ai code review
 

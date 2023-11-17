@@ -41,7 +41,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: AI Code Reviewer
-        uses: emanuel-braz/github-actions/code-review@0.1.0
+        uses: emanuel-braz/github-actions/code-review@0.1.2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           openai_key: ${{ secrets.OPENAI_KEY }}
@@ -50,6 +50,52 @@ jobs:
           append_prompt: |
             - Give a minimum of 0 suggestions and a maximum of 5 suggestions.
             - Translate the comment in all "reviewComment" properties to portuguese (pt-br).
+```
+
+## For better control, do that:
+* Create a repository variable
+  * name it `PROMPT_CODE_REVIEW`
+  * Add this as the value
+```md
+Your task is to review pull requests for possible bugs. Follow the instructions below:
+
+- Provide the response in following JSON format:  [{"lineNumber":  <line_number>, "reviewComment": "<review comment>"}]`;
+- You will provide suggestions only if there are critical issues or bugs in the code, otherwise return an empty array.
+- The maximum of suggestions in the response array are 2
+- Do use the given pull request title and description only for the overall context and only comment the code;
+- If there are no critical issues or bugs, return an empty array
+  ```
+> 🚨 This line is the most important rule you must keep it, if you are changing the original prompt  
+> `- Provide the response in following JSON format:  [{"lineNumber":  <line_number>, "reviewComment": "<review comment>"}]`;`
+
+Example:
+```yaml
+name: Code Reviewer
+run-name: Action started by ${{ github.actor }}
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+permissions: write-all
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: AI Code Reviewer
+        uses: emanuel-braz/github-actions/code-review@0.1.2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          openai_key: ${{ secrets.OPENAI_KEY }}
+          max_tokens: 900
+          exclude: "**/*.json, **/*.md, **/*.g.dart" # Optional: exclude patterns separated by commas
+          override_prompt: ${{ vars.PROMPT_CODE_REVIEW }} # Using variable is more flexible and faster changes
 ```
 
 - Customize the `exclude` input if you want to ignore certain file patterns from being reviewed.
